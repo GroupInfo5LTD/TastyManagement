@@ -2,13 +2,17 @@ package com.groupinfo5ltd.tastyManagement.entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Data;
@@ -26,6 +30,9 @@ public class Vente {
 	@Column(nullable = false)
 	private float total; 
 	
-	@OneToMany(mappedBy = "vente")
-	private List<Produit> produitVendu = new ArrayList<>(); 
+	@ManyToMany(mappedBy = "vente")
+	private Set<Produit> produitsVendu = new HashSet<>(); 
+	
+	@ManyToOne()
+	private Vendeur vendeur; 
 }

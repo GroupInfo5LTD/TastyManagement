@@ -8,22 +8,28 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
+import javax.persistence.OneToMany;
 
 import lombok.Data;
 
+/**
+ * this will change when we create the User class, as many of Vendeur infos will be in the User class
+ * @author medkhalil
+ *
+ */
 @Data
 @Entity
-public class Produit {
+public class Vendeur {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id; 
-	@Column(nullable = false)
-	private String nom; 
-	@Column(nullable = false)
-	private String categorie; 
+	private long id ; 
 	
-	@ManyToMany
-	private Set <Vente> ventes = new HashSet<>(); 
+	@Column(nullable = false)
+	private String firstName;
+	
+	@Column(nullable = false)
+	private String lastName; 
+	
+	@OneToMany(mappedBy = "vendeur")
+	private Set<Vente> ventes = new HashSet<>(); 
 }
