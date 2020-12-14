@@ -31,5 +31,5 @@ public class Vendeur {
 	private String lastName; 
 	
 	@OneToMany(mappedBy = "vendeur")
-	private Set<Vente> ventes = new HashSet<>(); 
+	private Set<Vente> ventesVendeur = new HashSet<>(); 
 }

@@ -30,9 +30,9 @@ public class Vente {
 	@Column(nullable = false)
 	private float total; 
 	
-	@ManyToMany(mappedBy = "vente")
+	@ManyToMany(mappedBy = "ventes")
 	private Set<Produit> produitsVendu = new HashSet<>(); 
 	
-	@ManyToOne()
+	@ManyToOne(targetEntity = Vendeur.class)
 	private Vendeur vendeur; 
 }
