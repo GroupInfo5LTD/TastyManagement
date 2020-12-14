@@ -29,9 +29,6 @@ public class Vente {
 	@Column(nullable = false)
 	private LocalDate created_at; 
 	
-	@Column(nullable = false)
-	private float total; 
-	
 	@ManyToMany(mappedBy = "ventes")
 	private Set<Produit> produitsVendu = new HashSet<>(); 
 	
