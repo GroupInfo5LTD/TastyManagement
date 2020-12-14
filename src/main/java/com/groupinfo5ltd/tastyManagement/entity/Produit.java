@@ -30,4 +30,23 @@ public class Produit {
 	
 	@ManyToMany
 	private Set <Vente> ventes = new HashSet<>(); 
+	
+	
+	/**
+	 * those methods are overriden to use the map in entiy.Vente properly
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Produit) {
+			
+			return Long.compare(this.id, ((Produit)obj).id) == 0 ; 
+		}
+		
+		return false; 
+	}
+	
+	@Override 
+	public int hashCode() {
+		return Long.valueOf(this.id).hashCode(); 
+	}
 }
