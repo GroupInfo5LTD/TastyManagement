@@ -2,8 +2,10 @@ package com.groupinfo5ltd.tastyManagement.entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -29,8 +31,8 @@ public class Vente {
 	@Column(nullable = false)
 	private LocalDate created_at; 
 	
-	@ManyToMany(mappedBy = "ventes")
-	private Set<Produit> produitsVendu = new HashSet<>(); 
+	@ManyToMany(mappedBy = "ventes", targetEntity = Produit.class)
+	private Map<Produit, Integer> produitsVendu = new HashMap<>(); 
 	
 	@ManyToOne(targetEntity = Vendeur.class)
 	private Vendeur vendeur; 
