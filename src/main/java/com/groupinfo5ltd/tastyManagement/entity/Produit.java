@@ -12,9 +12,11 @@ import javax.persistence.ManyToMany;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Produit {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

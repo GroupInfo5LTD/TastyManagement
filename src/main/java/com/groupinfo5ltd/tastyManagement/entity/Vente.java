@@ -16,9 +16,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Vente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

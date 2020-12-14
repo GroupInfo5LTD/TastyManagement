@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * this will change when we create the User class, as many of Vendeur infos will be in the User class
@@ -19,6 +20,7 @@ import lombok.Data;
  */
 @Data
 @Entity
+@NoArgsConstructor
 public class Vendeur {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
