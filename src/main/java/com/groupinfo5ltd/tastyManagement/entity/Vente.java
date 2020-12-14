@@ -13,8 +13,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 
 import lombok.Data;
@@ -32,7 +35,8 @@ public class Vente {
 	private LocalDate created_at; 
 	
 	@ManyToMany(mappedBy = "ventes", targetEntity = Produit.class)
-	private Map<Produit, Integer> produitsVendu = new HashMap<>(); 
+	@MapKeyJoinColumn(name = "produit_id")
+	private Map<Produit, Integer> produitsQuantiteVendu = new HashMap<>(); 
 	
 	@ManyToOne(targetEntity = Vendeur.class)
 	private Vendeur vendeur; 
