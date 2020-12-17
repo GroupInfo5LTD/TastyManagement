@@ -31,6 +31,7 @@ public class Produit {
 	@ManyToMany
 	private Set <Vente> ventes = new HashSet<>(); 
 	
+	private Recette recette ; 
 	
 	/**
 	 * those methods are overriden to use the map in entiy.Vente properly
