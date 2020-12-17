@@ -11,6 +11,11 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * maybe it's not the right place to test this out, is it the right package? 
+ * @author medkhalil
+ *
+ */
 public class VenteTest {
 	private Vente vente; 
 	
