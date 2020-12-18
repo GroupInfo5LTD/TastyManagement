@@ -9,6 +9,6 @@ import com.groupinfo5ltd.tastyManagement.entity.Vendeur;
 
 
 @Repository
-public interface VendeurRepository extends CrudRepository<Vendeur, Long>{
+public interface IVendeurRepository extends CrudRepository<Vendeur, Long>{
 	public Optional<Vendeur> findVendeurById(long id); 
 }
