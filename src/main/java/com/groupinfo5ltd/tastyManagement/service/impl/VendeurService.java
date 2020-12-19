@@ -23,7 +23,7 @@ public class VendeurService implements IVendeurService {
 			vendeurToCreate = vendeurRepository.save(vendeur);
 			log.info("CREATE A new Vendeur" + vendeur.toString());
 		} catch (Exception e) {
-			log.error("CREATE A new Vendeur" + vendeur.toString());
+			log.error("UNABLE to CREATE A new Vendeur" + vendeur.toString());
 		}
 		return vendeurToCreate;
 	}
@@ -35,7 +35,7 @@ public class VendeurService implements IVendeurService {
 			vendeurToUpdate = vendeurRepository.save(vendeur);
 			log.info("UPDATE Vendeur" + vendeur.toString());
 		} catch (Exception e) {
-			log.error("UPDATE Vendeur" + vendeur.toString());
+			log.error("UNABLE to UPDATE Vendeur" + vendeur.toString());
 		}
 		return vendeurToUpdate;
 	}
@@ -46,7 +46,7 @@ public class VendeurService implements IVendeurService {
 			vendeurRepository.delete(vendeur);
 			log.info("DELETE Vendeur" + vendeur.toString());
 		} catch (Exception e) {
-			log.error("DELETE Vendeur" + vendeur.toString());
+			log.error("UNABLE to DELETE Vendeur" + vendeur.toString());
 		}
 
 	}
@@ -61,7 +61,7 @@ public class VendeurService implements IVendeurService {
 			}
 			log.info("GET Vendeur by ID" + id);
 		} catch (Exception e) {
-			log.error("GET Vendeur by ID" + id);
+			log.error("UNABLE to GET Vendeur by ID" + id);
 		}
 		return vendeur;
 	}

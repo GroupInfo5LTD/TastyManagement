@@ -31,9 +31,9 @@ import com.groupinfo5ltd.tastyManagement.entity.Vente;
 public class VenteRepositoryTest {
 
 	@Autowired
-	VenteRepository venteRepository ; 
+	IVenteRepository venteRepository ; 
 	@Autowired
-	ProduitRepository produitRepository; 
+	IProduitRepository produitRepository; 
 	private Vente vente ; 
 	private Produit p1 ;
 	@BeforeEach
