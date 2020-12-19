@@ -10,7 +10,7 @@ import com.groupinfo5ltd.tastyManagement.entity.Vente;
 
 @Repository
 
-public interface VenteRepository extends CrudRepository<Vente, Long>{
+public interface IVenteRepository extends CrudRepository<Vente, Long>{
 	public Optional<Vente> findVenteById(long id); 
 	public Vente save(Vente vente); 
 }

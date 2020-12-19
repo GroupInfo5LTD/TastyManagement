@@ -33,5 +33,6 @@ public class Vendeur {
 	private String lastName; 
 	
 	@OneToMany(mappedBy = "vendeur")
-	private Set<Vente> ventesVendeur = new HashSet<>(); 
+	private Set<Vente> ventesVendeur = new HashSet<>();
+ 
 }

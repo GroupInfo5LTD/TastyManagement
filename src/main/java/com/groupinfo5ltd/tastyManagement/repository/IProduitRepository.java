@@ -14,6 +14,6 @@ import com.groupinfo5ltd.tastyManagement.entity.Produit;
  *
  */
 @Repository
-public interface ProduitRepository extends CrudRepository<Produit, Long>{
+public interface IProduitRepository extends CrudRepository<Produit, Long>{
 	public Optional<Produit> findProduitById(Long id) ;
 }

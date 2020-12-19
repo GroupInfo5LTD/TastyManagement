@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.groupinfo5ltd.tastyManagement.entity.Vente;
-import com.groupinfo5ltd.tastyManagement.repository.VenteRepository;
+import com.groupinfo5ltd.tastyManagement.repository.IVenteRepository;
 import com.groupinfo5ltd.tastyManagement.service.IVenteService;
 
 @Service
@@ -18,7 +18,7 @@ public class VenteService implements IVenteService{
 			LoggerFactory.getLogger(VenteService.class); 
 	
 	@Autowired 
-	private VenteRepository venteRepository;
+	private IVenteRepository venteRepository;
 	
 	@Override
 	public Vente ajouterVente(Vente vente) {
