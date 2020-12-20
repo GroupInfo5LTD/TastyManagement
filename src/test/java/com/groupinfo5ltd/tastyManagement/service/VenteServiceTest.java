@@ -21,7 +21,7 @@ import com.groupinfo5ltd.tastyManagement.service.impl.VenteService;
 public class VenteServiceTest {
 
 	@Autowired
-	VenteService venteService ;
+	IVenteService venteService ;
 	
 	Vente venteEnregistrer ; 
 	
