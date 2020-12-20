@@ -9,6 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 //import javax.persistence.ManyToMany;
 //import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,10 +27,15 @@ public class Recette {
 	
 	private String nom; 
 	
+	
+	@OneToOne
+	private Produit produit ; 
+	
 	/**
 	 * Map represent Ressource and it's quantity in a weight unit (gram for example). 
 	 */
 //	@ManyToMany(mappedBy = "recette", targetEntity = IRessource.class)
-//	@MapKeyJoinColumn(name = "produit_id")
+//	@MapKeyJoinColumn(name = "recette_id")
+	@Transient
 	private Map<IRessource, Float> ressourceQuatite = new HashMap<>(); 
 }
