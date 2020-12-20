@@ -1,5 +1,6 @@
 package com.groupinfo5ltd.tastyManagement.service;
 
+
 import com.groupinfo5ltd.tastyManagement.entity.Vente;
 
 public interface IVenteService {
