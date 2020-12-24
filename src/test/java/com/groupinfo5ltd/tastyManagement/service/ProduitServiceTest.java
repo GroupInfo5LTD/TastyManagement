@@ -1,7 +1,10 @@
 package com.groupinfo5ltd.tastyManagement.service;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.groupinfo5ltd.tastyManagement.entity.Produit;
 import com.groupinfo5ltd.tastyManagement.entity.Vendeur;
+import com.groupinfo5ltd.tastyManagement.entity.Vente;
 import com.groupinfo5ltd.tastyManagement.service.impl.ProduitService;
 import com.groupinfo5ltd.tastyManagement.service.impl.VendeurService;
 
@@ -67,6 +71,30 @@ public class ProduitServiceTest {
 		// then
 		
 		assertEquals(produitService.trouverProduitParId(this.produitEnregistrer.getId()).getNom(), produitUpdated.getNom()); 
+	}
+	
+	@Test
+	void shouldReturn_NewProduit_When_UpdatingNonExistingProduit() {
+		// given
+
+		long id = 155 ; 
+		Produit produitUpdated = new Produit(); 
+		// avoid having the same id as the existing generated id in the database 
+		// We have only 1 instance in the database. 
+		
+		produitUpdated.setId((id != this.produitEnregistrer.getId()) ? id : id * 2 );
+		produitUpdated.setNom("pizza fruit de mer");
+		produitUpdated.setCategorie(this.produitEnregistrer.getCategorie());
+		produitUpdated.setPrix(this.produitEnregistrer.getPrix());
+		
+		// when
+		
+		long realNewId = produitService.modifierProduit(produitUpdated).getId(); 
+		
+		// then 
+		
+		assertNotNull(produitService.trouverProduitParId(realNewId)); 
+		
 	}
 	
 	@Test

@@ -36,7 +36,7 @@ public class ProduitService implements IProduitService{
 	}
 
 	private boolean produitExists(long id) {
-		return produitRepository.findById(id) != null; 
+		return produitRepository.findById(id).isPresent(); 
 	}
 
 	@Override
