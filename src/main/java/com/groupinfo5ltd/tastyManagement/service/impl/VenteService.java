@@ -36,7 +36,7 @@ public class VenteService implements IVenteService{
 		}
 		else {
 			log.info("THE REQUESTED VENTE DOESN'T EXIST");
-			log.info("CREATE A new Vente" + vente.toString());
+			log.info("CREATE A new Vente " + vente.toString());
 		}
 		return venteRepository.save(vente);
 	}
@@ -54,15 +54,17 @@ public class VenteService implements IVenteService{
 	}
 	
 	public Boolean venteExists(Long id) {
-		return venteRepository.findById(id) != null; 
+		return venteRepository.findById(id).isPresent(); 
 	}
 
 	@Override
 	public Vente trouverVenteParId(Long id) {
 		Optional<Vente>vente = venteRepository.findById(id); 
 		if(vente.isPresent()) {
+			log.info("GET Vente by ID" + id);
 			return vente.get(); 
 		}
+		log.error("UNABLE TO FIND Vente with an id of : "  + id);
 		return null; 
 	}
 	

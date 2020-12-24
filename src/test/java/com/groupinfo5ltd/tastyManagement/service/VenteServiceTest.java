@@ -1,5 +1,6 @@
-package com.groupinfo5ltd.tastyManagement.service;
+	package com.groupinfo5ltd.tastyManagement.service;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.groupinfo5ltd.tastyManagement.entity.Vendeur;
 import com.groupinfo5ltd.tastyManagement.entity.Vente;
 import com.groupinfo5ltd.tastyManagement.service.impl.VenteService;
 
@@ -76,6 +78,27 @@ public class VenteServiceTest {
 		assertEquals(venteService.trouverVenteParId(this.venteEnregistrer.getId()).getCreated_at(), LocalDate.of(2020, 01, 01));
 	}
 	
+	@Test
+	void shouldReturn_NewVente_When_UpdatingNonExistingVente() {
+		// given
+
+		long id = 155 ; 
+		Vente venteUpdated = new Vente(); 
+		// avoid having the same id as the existing generated id in the database 
+		// We have only 1 instance in the database. 
+		
+		venteUpdated.setId((id != this.venteEnregistrer.getId()) ? id : id * 2 );
+		venteUpdated.setCreated_at(LocalDate.of(2020, 01, 01));
+		
+		// when
+		
+		long realNewId = venteService.modifierVente(venteUpdated).getId(); 
+		
+		// then 
+		
+		assertNotNull(venteService.trouverVenteParId(realNewId)); 
+		
+	}
 	@Test
 	void shouldReturnTrue_When_DeletedVente_DOESNTEXIST() {
 		//given 

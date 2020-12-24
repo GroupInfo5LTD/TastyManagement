@@ -1,5 +1,6 @@
 package com.groupinfo5ltd.tastyManagement.service;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -65,6 +66,30 @@ public class VendeurServiceTest {
 	}
 	
 	@Test
+	void shouldReturn_NewVendeur_When_UpdatingNonExistingVendeur() {
+		// given
+
+		long id = 155 ; 
+		Vendeur vendeurUpdated = new Vendeur(); 
+		// avoid having the same id as the existing generated id in the database 
+		// We have only 1 instance in the database. 
+		
+		vendeurUpdated.setId((id != this.vendeurEnregistrer.getId()) ? id : id * 2 );
+//		vendeurUpdated.setId(10000000);
+		vendeurUpdated.setFirstName("Karl");
+		vendeurUpdated.setLastName("Unkown");
+		
+		// when
+		
+		long realNewId = vendeurService.modifierVendeur(vendeurUpdated).getId(); 
+		
+		// then 
+		
+		assertNotNull(vendeurService.trouverVendeurParId(realNewId)); 
+		
+	}
+	
+	@Test
 	void shouldReturnNull_When_DeletedVendeurDoesntExist() {
 		// given
 		Vendeur vendeurDeleted = new Vendeur(); 
@@ -78,4 +103,6 @@ public class VendeurServiceTest {
 		
 		assertNull(vendeurService.trouverVendeurParId(this.vendeurEnregistrer.getId())); 
 	}
+	
+	
 }

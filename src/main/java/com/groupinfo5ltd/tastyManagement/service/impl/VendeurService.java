@@ -34,8 +34,15 @@ public class VendeurService implements IVendeurService {
 	public Vendeur modifierVendeur(Vendeur vendeur) {
 		Vendeur vendeurToUpdate = null;
 		try {
+			if(vendeurExists(vendeur.getId())) {
+				log.info("UPDATE Vendeur" + vendeur.toString());
+			}
+			else { 
+				log.info("THE REQUESTED VENTE DOESN'T EXIST");
+				log.info("CREATE A new Vendeur " + vendeur.toString());
+			}
 			vendeurToUpdate = vendeurRepository.save(vendeur);
-			log.info("UPDATE Vendeur" + vendeur.toString());
+			
 		} catch (Exception e) {
 			log.error("UNABLE to UPDATE Vendeur" + vendeur.toString());
 		}
@@ -45,8 +52,14 @@ public class VendeurService implements IVendeurService {
 	@Override
 	public void supprimerVendeur(Vendeur vendeur) {
 		try {
+			if(vendeurExists(vendeur.getId())) { 
+				log.info("DELETE Vendeur" + vendeur.toString());
+			}
+			else { 
+				log.info("VENTE DOESN'T EXIST IN THE DATABASE. the requested vente to be deleted: " + vendeur.toString()); 
+			}
 			vendeurRepository.delete(vendeur);
-			log.info("DELETE Vendeur" + vendeur.toString());
+			
 		} catch (Exception e) {
 			log.error("UNABLE to DELETE Vendeur" + vendeur.toString());
 		}
@@ -66,6 +79,10 @@ public class VendeurService implements IVendeurService {
 			log.error("UNABLE to GET Vendeur by ID" + id);
 		}
 		return vendeur;
+	}
+	
+	public Boolean vendeurExists(Long id) {
+		return !vendeurRepository.findById(id).isEmpty(); 
 	}
 
 }
