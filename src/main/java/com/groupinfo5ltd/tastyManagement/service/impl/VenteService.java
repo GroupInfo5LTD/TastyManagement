@@ -22,6 +22,9 @@ public class VenteService implements IVenteService{
 	
 	@Override
 	public Vente ajouterVente(Vente vente) {
+		
+		checkVendeurProduit(vente);
+		
 		log.info("CREATE A new Vente" + vente.toString());
 		return venteRepository.save(vente);
 	}
@@ -31,6 +34,10 @@ public class VenteService implements IVenteService{
 	 */
 	@Override
 	public Vente modifierVente(Vente vente) {
+		
+		checkVendeurProduit(vente);
+		
+		
 		if(venteExists(vente.getId())) {
 			log.info("UPDATED Vente: " + vente.toString() );
 		}
@@ -67,5 +74,25 @@ public class VenteService implements IVenteService{
 		log.error("UNABLE TO FIND Vente with an id of : "  + id);
 		return null; 
 	}
+	
+	/**
+	 * Vente doit etre lie a un vendeur et un produit au moins. 
+	 * @param vente : vente a checker. 
+	 */
+	public void checkVendeurProduit(Vente vente) {
+		try {
+			if(vente.getVendeur() != null) { 
+				if(vente.getProduitsQuantiteVendu().isEmpty()) {
+					throw new RuntimeException("PRODUIT UNDEFINIED"); 
+				}
+				throw new RuntimeException("VENDEUR UNDEFINIED"); 
+			}
+			
+			
+		} catch (RuntimeException e) {
+			log.error(e.getMessage());
+		}
+	}
+	
 	
 }
