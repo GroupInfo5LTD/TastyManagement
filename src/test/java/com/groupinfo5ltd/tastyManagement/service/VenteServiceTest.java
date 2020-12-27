@@ -165,6 +165,7 @@ public class VenteServiceTest {
 		
 		Vente vente = venteService.trouverVenteParId(venteEnregistrer.getId());
 		log.info("**** TEST: VENDEUR LIE AU VENTE: " + vente.getVendeur().toString());
+		vente.getProduitsQuantiteVendu().forEach((k,v)->log.info("**** TEST: Produit LIE AU VENTE: " + k.toString()));
 		//when
 		
 		venteService.supprimerVente(venteEnregistrer);
