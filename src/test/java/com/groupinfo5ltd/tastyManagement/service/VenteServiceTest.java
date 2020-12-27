@@ -6,18 +6,23 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDate;
 
+import javax.transaction.Transactional;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.groupinfo5ltd.tastyManagement.entity.Produit;
 import com.groupinfo5ltd.tastyManagement.entity.Vendeur;
 import com.groupinfo5ltd.tastyManagement.entity.Vente;
-import com.groupinfo5ltd.tastyManagement.service.impl.VenteService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class VenteServiceTest {
@@ -25,16 +30,44 @@ public class VenteServiceTest {
 	@Autowired
 	IVenteService venteService ;
 	
+	@Autowired
+	IProduitService produitService; 
+	
+	@Autowired
+	IVendeurService vendeurService; 
+	
 	Vente venteEnregistrer ; 
+	Produit produitEnregistrer; 
+	Vendeur vendeurEnregistrer; 
+	
+	
 	
 	@BeforeEach
 	public void init() {
-		//create a Vente instance in db 
+
+		//Create a Produit instance in db. 
+		Produit produit = new Produit(); 
 		
-		Vente vente = new Vente(); 
+		produit.setNom("pizza Pepperoni");
+		produit.setCategorie("pizza");
+		produit.setPrix(130);
 		
+		produitEnregistrer = produitService.ajouterProduit(produit);
+		
+		//Create a Vendeur instance in db.
+		Vendeur vendeur = new Vendeur();
+		
+		vendeur.setFirstName("Med");
+		vendeur.setLastName("Schneider");
+		 
+		vendeurEnregistrer = vendeurService.ajouterVendeur(vendeur); 
+		
+		//create a Vente instance in db
+		
+		Vente vente = new Vente();
 		vente.setCreated_at(LocalDate.now());
-		
+		vente.getProduitsQuantiteVendu().put(produit, 6); 
+		vente.setVendeur(vendeur);
 		/**
 		 * added after the test of "ajouterVente" is completed. 
 		 */
@@ -42,6 +75,13 @@ public class VenteServiceTest {
 		
 		
 		
+	}
+	
+	@AfterEach()
+	void reset() { 
+		venteService.supprimerVente(venteEnregistrer);
+		produitService.supprimerProduit(produitEnregistrer);
+		vendeurService.supprimerVendeur(vendeurEnregistrer);
 	}
 	
 	@Test
@@ -112,6 +152,25 @@ public class VenteServiceTest {
 		//then
 		
 		assertNull(venteService.trouverVenteParId(this.venteEnregistrer.getId()));
+	}
+	
+	@Test
+	@Transactional
+	void shouldReturn0_When_DeletedVente() {
+		
+		//given 
+		// we already have venteEnregistrer object. 
+		
+		int sizeBeforeDelete = venteService.trouverToutLesVentes().size(); 
+		
+		Vente vente = venteService.trouverVenteParId(venteEnregistrer.getId());
+		log.info("**** TEST: VENDEUR LIE AU VENTE: " + vente.getVendeur().toString());
+		//when
+		
+		venteService.supprimerVente(venteEnregistrer);
+		
+		//then 
+		assertEquals(sizeBeforeDelete - 1, venteService.trouverToutLesVentes().size()); 
 	}
 	
 }

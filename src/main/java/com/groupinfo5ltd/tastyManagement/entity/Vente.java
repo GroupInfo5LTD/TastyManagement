@@ -31,6 +31,6 @@ public class Vente {
 	@MapKeyJoinColumn(name = "produit_id")
 	private Map<Produit, Integer> produitsQuantiteVendu = new HashMap<>(); 
 	
-	@ManyToOne(targetEntity = Vendeur.class)
+	@ManyToOne()
 	private Vendeur vendeur; 
 }

@@ -1,6 +1,8 @@
 package com.groupinfo5ltd.tastyManagement.service.impl;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.groupinfo5ltd.tastyManagement.entity.Vente;
+import com.groupinfo5ltd.tastyManagement.repository.IProduitRepository;
 import com.groupinfo5ltd.tastyManagement.repository.IVenteRepository;
 import com.groupinfo5ltd.tastyManagement.service.IVenteService;
 
@@ -19,6 +22,7 @@ public class VenteService implements IVenteService{
 	
 	@Autowired 
 	private IVenteRepository venteRepository;
+	
 	
 	@Override
 	public Vente ajouterVente(Vente vente) {
@@ -52,6 +56,10 @@ public class VenteService implements IVenteService{
 	public void supprimerVente(Vente vente) {
 		if(venteExists(vente.getId())) {
 			venteRepository.deleteById(vente.getId());
+			/**
+			 * remove the vente instance in every one of the produit instances. 
+			 */
+			vente.getProduitsQuantiteVendu().forEach((k, v) -> k.getVentes().remove(vente));
 			log.info("DELETE VENTE: " + vente.toString());
 		}
 		else {
@@ -75,13 +83,15 @@ public class VenteService implements IVenteService{
 		return null; 
 	}
 	
+	
+	
 	/**
 	 * Vente doit etre lie a un vendeur et un produit au moins. 
 	 * @param vente : vente a checker. 
 	 */
 	public void checkVendeurProduit(Vente vente) {
 		try {
-			if(vente.getVendeur() != null) { 
+			if(vente.getVendeur() == null) { 
 				if(vente.getProduitsQuantiteVendu().isEmpty()) {
 					throw new RuntimeException("PRODUIT UNDEFINIED"); 
 				}
@@ -92,6 +102,17 @@ public class VenteService implements IVenteService{
 		} catch (RuntimeException e) {
 			log.error(e.getMessage());
 		}
+	}
+
+	@Override
+	public Set<Vente> trouverToutLesVentes() {
+		Set<Vente> ventes = new HashSet<>(); 
+		venteRepository.findAll()
+				.forEach((vente -> ventes.add(vente)));
+		if(ventes.isEmpty()) {
+			log.info("VENTE TABLE IS EMPTY");
+		}
+		return ventes;
 	}
 	
 	

@@ -1,6 +1,7 @@
 package com.groupinfo5ltd.tastyManagement.service.impl;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,12 @@ public class ProduitService implements IProduitService{
 			return produit.get(); 
 		}
 		return null; 
+	}
+
+	@Override
+	public Set<Produit> trouverToutLesProduits() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

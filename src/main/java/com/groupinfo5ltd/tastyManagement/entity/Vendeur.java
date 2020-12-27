@@ -3,6 +3,7 @@ package com.groupinfo5ltd.tastyManagement.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +33,7 @@ public class Vendeur {
 	@Column(nullable = false)
 	private String lastName; 
 	
-	@OneToMany(mappedBy = "vendeur")
+	@OneToMany(mappedBy = "vendeur", cascade = {CascadeType.PERSIST/*, CascadeType.MERGE*/})
 	private Set<Vente> ventesVendeur = new HashSet<>();
  
 }
