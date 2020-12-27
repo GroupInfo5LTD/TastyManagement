@@ -1,6 +1,7 @@
 	package com.groupinfo5ltd.tastyManagement.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -66,7 +67,7 @@ public class VenteServiceTest {
 		
 		Vente vente = new Vente();
 		vente.setCreated_at(LocalDate.now());
-		vente.getProduitsQuantiteVendu().put(produit, 6); 
+		vente.getProduitsQuantiteVendu().put(produit, 10); 
 		vente.setVendeur(vendeur);
 		/**
 		 * added after the test of "ajouterVente" is completed. 
@@ -79,7 +80,7 @@ public class VenteServiceTest {
 	
 	@AfterEach()
 	void reset() { 
-		venteService.supprimerVente(venteEnregistrer);
+		venteService.supprimerToutLesVentes();
 		produitService.supprimerProduit(produitEnregistrer);
 		vendeurService.supprimerVendeur(vendeurEnregistrer);
 	}
@@ -90,6 +91,8 @@ public class VenteServiceTest {
 		//given 
 		Vente venteTest = new Vente(); 
 		venteTest.setCreated_at(LocalDate.now()); 
+		venteTest.getProduitsQuantiteVendu().put(this.produitEnregistrer, 3); 
+		venteTest.setVendeur(this.vendeurEnregistrer);
 		//when
 		
 		Long id = venteService.ajouterVente(venteTest).getId(); 
@@ -107,7 +110,8 @@ public class VenteServiceTest {
 		venteUpdated.setId(this.venteEnregistrer.getId());
 			//updated filed
 		venteUpdated.setCreated_at(LocalDate.of(2020, 01, 01));
-		
+		venteUpdated.getProduitsQuantiteVendu().put(this.produitEnregistrer, 3); 
+		venteUpdated.setVendeur(this.vendeurEnregistrer);
 		//when
 		
 		venteService.modifierVente(venteUpdated); 
@@ -129,7 +133,8 @@ public class VenteServiceTest {
 		
 		venteUpdated.setId((id != this.venteEnregistrer.getId()) ? id : id * 2 );
 		venteUpdated.setCreated_at(LocalDate.of(2020, 01, 01));
-		
+		venteUpdated.getProduitsQuantiteVendu().put(this.produitEnregistrer, 3); 
+		venteUpdated.setVendeur(this.vendeurEnregistrer);
 		// when
 		
 		long realNewId = venteService.modifierVente(venteUpdated).getId(); 
@@ -140,10 +145,11 @@ public class VenteServiceTest {
 		
 	}
 	@Test
+	@Transactional
 	void shouldReturnTrue_When_DeletedVente_DOESNTEXIST() {
 		//given 
 		Vente venteDeleted = new Vente(); 
-		venteDeleted.setId(this.venteEnregistrer.getId());
+		venteDeleted.setId(this.venteEnregistrer.getId() + 10);
 		
 		//when
 		
@@ -151,7 +157,7 @@ public class VenteServiceTest {
 		
 		//then
 		
-		assertNull(venteService.trouverVenteParId(this.venteEnregistrer.getId()));
+		assertNull(venteService.trouverVenteParId(venteDeleted.getId()));
 	}
 	
 	@Test
@@ -172,6 +178,44 @@ public class VenteServiceTest {
 		
 		//then 
 		assertEquals(sizeBeforeDelete - 1, venteService.trouverToutLesVentes().size()); 
+	}
+	
+	@Test
+	void shouldThrowException_When_VenteDosntHaveProduit() {
+
+		// given
+		Vente vente = new Vente(); 
+		vente.setCreated_at(LocalDate.of(2020, 01, 01));
+		vente.setVendeur(this.vendeurEnregistrer);
+		
+		// when
+		try {
+		venteService.ajouterVente(vente); 
+		
+		fail("Exception expected to be throwed"); 
+		} catch (Exception e) {
+
+		}
+		
+	}
+	
+	@Test
+	void shouldThrowException_When_VenteDosntHaveVendeur() {
+
+		// given
+		Vente vente = new Vente(); 
+		vente.setCreated_at(LocalDate.of(2020, 01, 01));
+		vente.getProduitsQuantiteVendu().put(this.produitEnregistrer, 3);
+		
+		// when
+		try {
+		venteService.ajouterVente(vente); 
+		
+		fail("Exception expected to be throwed"); 
+		} catch (Exception e) {
+
+		}
+		
 	}
 	
 }

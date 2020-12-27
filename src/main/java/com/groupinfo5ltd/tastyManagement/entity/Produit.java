@@ -29,11 +29,9 @@ public class Produit {
 	
 	private float prix; 
 	
-	@OneToOne
-	private Recette recette ; 
+//	@OneToOne
+//	private Recette recette ; 
 	
-	@ManyToMany
-	private Set <Vente> ventes = new HashSet<>(); 
 
 	
 	

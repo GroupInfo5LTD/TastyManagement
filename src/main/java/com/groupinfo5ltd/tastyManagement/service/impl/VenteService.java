@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.groupinfo5ltd.tastyManagement.entity.Vente;
-import com.groupinfo5ltd.tastyManagement.repository.IProduitRepository;
 import com.groupinfo5ltd.tastyManagement.repository.IVenteRepository;
 import com.groupinfo5ltd.tastyManagement.service.IVenteService;
 
@@ -59,7 +58,7 @@ public class VenteService implements IVenteService{
 			/**
 			 * remove the vente instance in every one of the produit instances. 
 			 */
-			vente.getProduitsQuantiteVendu().forEach((k, v) -> k.getVentes().remove(vente));
+//			vente.getProduitsQuantiteVendu().forEach((k, v) -> k.getVentes().remove(vente));
 			log.info("DELETE VENTE: " + vente.toString());
 		}
 		else {
@@ -67,7 +66,9 @@ public class VenteService implements IVenteService{
 		}
 		
 	}
-	
+	public void supprimerToutLesVentes() {
+		venteRepository.deleteAll();
+	}
 	public Boolean venteExists(Long id) {
 		return venteRepository.findById(id).isPresent(); 
 	}
@@ -90,18 +91,17 @@ public class VenteService implements IVenteService{
 	 * @param vente : vente a checker. 
 	 */
 	public void checkVendeurProduit(Vente vente) {
-		try {
-			if(vente.getVendeur() == null) { 
-				if(vente.getProduitsQuantiteVendu().isEmpty()) {
-					throw new RuntimeException("PRODUIT UNDEFINIED"); 
-				}
+//		try {
+			if(vente.getVendeur() == null) { 	
 				throw new RuntimeException("VENDEUR UNDEFINIED"); 
 			}
+			if(vente.getProduitsQuantiteVendu().isEmpty()) {
+				throw new RuntimeException("PRODUIT UNDEFINIED"); 
+			}
 			
-			
-		} catch (RuntimeException e) {
-			log.error(e.getMessage());
-		}
+//		} catch (RuntimeException e) {
+//			log.error(e.getMessage());
+//		}
 	}
 
 	@Override

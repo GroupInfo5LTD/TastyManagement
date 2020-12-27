@@ -11,4 +11,5 @@ public interface IVenteService {
 	public void supprimerVente(Vente vente); 
 	public Vente trouverVenteParId(Long id); 
 	public Set<Vente> trouverToutLesVentes(); 
+	public void supprimerToutLesVentes();
 }
