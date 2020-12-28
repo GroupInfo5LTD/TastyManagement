@@ -1,6 +1,7 @@
 package com.groupinfo5ltd.tastyManagement.service.impl;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +84,12 @@ public class VendeurService implements IVendeurService {
 	
 	public Boolean vendeurExists(Long id) {
 		return !vendeurRepository.findById(id).isEmpty(); 
+	}
+
+	@Override
+	public Set<Vendeur> trouverToutLesVendeurs() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

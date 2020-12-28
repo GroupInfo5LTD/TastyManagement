@@ -1,23 +1,29 @@
 	package com.groupinfo5ltd.tastyManagement.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDate;
 
+import javax.transaction.Transactional;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.groupinfo5ltd.tastyManagement.entity.Produit;
 import com.groupinfo5ltd.tastyManagement.entity.Vendeur;
 import com.groupinfo5ltd.tastyManagement.entity.Vente;
-import com.groupinfo5ltd.tastyManagement.service.impl.VenteService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class VenteServiceTest {
@@ -25,16 +31,44 @@ public class VenteServiceTest {
 	@Autowired
 	IVenteService venteService ;
 	
+	@Autowired
+	IProduitService produitService; 
+	
+	@Autowired
+	IVendeurService vendeurService; 
+	
 	Vente venteEnregistrer ; 
+	Produit produitEnregistrer; 
+	Vendeur vendeurEnregistrer; 
+	
+	
 	
 	@BeforeEach
 	public void init() {
-		//create a Vente instance in db 
+
+		//Create a Produit instance in db. 
+		Produit produit = new Produit(); 
 		
-		Vente vente = new Vente(); 
+		produit.setNom("pizza Pepperoni");
+		produit.setCategorie("pizza");
+		produit.setPrix(130);
 		
+		produitEnregistrer = produitService.ajouterProduit(produit);
+		
+		//Create a Vendeur instance in db.
+		Vendeur vendeur = new Vendeur();
+		
+		vendeur.setFirstName("Med");
+		vendeur.setLastName("Schneider");
+		 
+		vendeurEnregistrer = vendeurService.ajouterVendeur(vendeur); 
+		
+		//create a Vente instance in db
+		
+		Vente vente = new Vente();
 		vente.setCreated_at(LocalDate.now());
-		
+		vente.getProduitsQuantiteVendu().put(produit, 10); 
+		vente.setVendeur(vendeur);
 		/**
 		 * added after the test of "ajouterVente" is completed. 
 		 */
@@ -44,12 +78,21 @@ public class VenteServiceTest {
 		
 	}
 	
+	@AfterEach()
+	void reset() { 
+		venteService.supprimerToutLesVentes();
+		produitService.supprimerProduit(produitEnregistrer);
+		vendeurService.supprimerVendeur(vendeurEnregistrer);
+	}
+	
 	@Test
 //	@Transactional()
 	void shouldReturnTrue_When_VenteAddedToDatabase() {
 		//given 
 		Vente venteTest = new Vente(); 
 		venteTest.setCreated_at(LocalDate.now()); 
+		venteTest.getProduitsQuantiteVendu().put(this.produitEnregistrer, 3); 
+		venteTest.setVendeur(this.vendeurEnregistrer);
 		//when
 		
 		Long id = venteService.ajouterVente(venteTest).getId(); 
@@ -67,7 +110,8 @@ public class VenteServiceTest {
 		venteUpdated.setId(this.venteEnregistrer.getId());
 			//updated filed
 		venteUpdated.setCreated_at(LocalDate.of(2020, 01, 01));
-		
+		venteUpdated.getProduitsQuantiteVendu().put(this.produitEnregistrer, 3); 
+		venteUpdated.setVendeur(this.vendeurEnregistrer);
 		//when
 		
 		venteService.modifierVente(venteUpdated); 
@@ -89,7 +133,8 @@ public class VenteServiceTest {
 		
 		venteUpdated.setId((id != this.venteEnregistrer.getId()) ? id : id * 2 );
 		venteUpdated.setCreated_at(LocalDate.of(2020, 01, 01));
-		
+		venteUpdated.getProduitsQuantiteVendu().put(this.produitEnregistrer, 3); 
+		venteUpdated.setVendeur(this.vendeurEnregistrer);
 		// when
 		
 		long realNewId = venteService.modifierVente(venteUpdated).getId(); 
@@ -100,10 +145,11 @@ public class VenteServiceTest {
 		
 	}
 	@Test
+	@Transactional
 	void shouldReturnTrue_When_DeletedVente_DOESNTEXIST() {
 		//given 
 		Vente venteDeleted = new Vente(); 
-		venteDeleted.setId(this.venteEnregistrer.getId());
+		venteDeleted.setId(this.venteEnregistrer.getId() + 10);
 		
 		//when
 		
@@ -111,7 +157,65 @@ public class VenteServiceTest {
 		
 		//then
 		
-		assertNull(venteService.trouverVenteParId(this.venteEnregistrer.getId()));
+		assertNull(venteService.trouverVenteParId(venteDeleted.getId()));
+	}
+	
+	@Test
+	@Transactional
+	void shouldReturn0_When_DeletedVente() {
+		
+		//given 
+		// we already have venteEnregistrer object. 
+		
+		int sizeBeforeDelete = venteService.trouverToutLesVentes().size(); 
+		
+		Vente vente = venteService.trouverVenteParId(venteEnregistrer.getId());
+		log.info("**** TEST: VENDEUR LIE AU VENTE: " + vente.getVendeur().toString());
+		vente.getProduitsQuantiteVendu().forEach((k,v)->log.info("**** TEST: Produit LIE AU VENTE: " + k.toString()));
+		//when
+		
+		venteService.supprimerVente(venteEnregistrer);
+		
+		//then 
+		assertEquals(sizeBeforeDelete - 1, venteService.trouverToutLesVentes().size()); 
+	}
+	
+	@Test
+	void shouldThrowException_When_VenteDosntHaveProduit() {
+
+		// given
+		Vente vente = new Vente(); 
+		vente.setCreated_at(LocalDate.of(2020, 01, 01));
+		vente.setVendeur(this.vendeurEnregistrer);
+		
+		// when
+		try {
+		venteService.ajouterVente(vente); 
+		
+		fail("Exception expected to be throwed"); 
+		} catch (Exception e) {
+
+		}
+		
+	}
+	
+	@Test
+	void shouldThrowException_When_VenteDosntHaveVendeur() {
+
+		// given
+		Vente vente = new Vente(); 
+		vente.setCreated_at(LocalDate.of(2020, 01, 01));
+		vente.getProduitsQuantiteVendu().put(this.produitEnregistrer, 3);
+		
+		// when
+		try {
+		venteService.ajouterVente(vente); 
+		
+		fail("Exception expected to be throwed"); 
+		} catch (Exception e) {
+
+		}
+		
 	}
 	
 }

@@ -1,6 +1,8 @@
 package com.groupinfo5ltd.tastyManagement.service.impl;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +22,12 @@ public class VenteService implements IVenteService{
 	@Autowired 
 	private IVenteRepository venteRepository;
 	
+	
 	@Override
 	public Vente ajouterVente(Vente vente) {
+		
+		checkVendeurProduit(vente);
+		
 		log.info("CREATE A new Vente" + vente.toString());
 		return venteRepository.save(vente);
 	}
@@ -31,6 +37,10 @@ public class VenteService implements IVenteService{
 	 */
 	@Override
 	public Vente modifierVente(Vente vente) {
+		
+		checkVendeurProduit(vente);
+		
+		
 		if(venteExists(vente.getId())) {
 			log.info("UPDATED Vente: " + vente.toString() );
 		}
@@ -45,6 +55,10 @@ public class VenteService implements IVenteService{
 	public void supprimerVente(Vente vente) {
 		if(venteExists(vente.getId())) {
 			venteRepository.deleteById(vente.getId());
+			/**
+			 * remove the vente instance in every one of the produit instances. 
+			 */
+//			vente.getProduitsQuantiteVendu().forEach((k, v) -> k.getVentes().remove(vente));
 			log.info("DELETE VENTE: " + vente.toString());
 		}
 		else {
@@ -52,7 +66,9 @@ public class VenteService implements IVenteService{
 		}
 		
 	}
-	
+	public void supprimerToutLesVentes() {
+		venteRepository.deleteAll();
+	}
 	public Boolean venteExists(Long id) {
 		return venteRepository.findById(id).isPresent(); 
 	}
@@ -67,5 +83,37 @@ public class VenteService implements IVenteService{
 		log.error("UNABLE TO FIND Vente with an id of : "  + id);
 		return null; 
 	}
+	
+	
+	
+	/**
+	 * Vente doit etre lie a un vendeur et un produit au moins. 
+	 * @param vente : vente a checker. 
+	 */
+	public void checkVendeurProduit(Vente vente) {
+//		try {
+			if(vente.getVendeur() == null) { 	
+				throw new RuntimeException("VENDEUR UNDEFINIED"); 
+			}
+			if(vente.getProduitsQuantiteVendu().isEmpty()) {
+				throw new RuntimeException("PRODUIT UNDEFINIED"); 
+			}
+			
+//		} catch (RuntimeException e) {
+//			log.error(e.getMessage());
+//		}
+	}
+
+	@Override
+	public Set<Vente> trouverToutLesVentes() {
+		Set<Vente> ventes = new HashSet<>(); 
+		venteRepository.findAll()
+				.forEach((vente -> ventes.add(vente)));
+		if(ventes.isEmpty()) {
+			log.info("VENTE TABLE IS EMPTY");
+		}
+		return ventes;
+	}
+	
 	
 }
