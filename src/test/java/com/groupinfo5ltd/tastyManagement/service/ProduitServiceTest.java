@@ -46,13 +46,20 @@ public class ProduitServiceTest {
 		// given 
 		//vendeurEnregistrer
 		
+		int allProduitSize = produitService.trouverToutLesProduits().size(); 
+		
+		Produit produit = new Produit() ; 
+		produit.setNom("salade gourmande");
+		produit.setCategorie("salade");
+		produit.setPrix(25);
+		
 		// when
 		
-		Long id = produitService.ajouterProduit(this.produitEnregistrer).getId(); 
+		produitService.ajouterProduit(produit).getId(); 
 		
 		// then
 		
-		assertEquals(produitService.trouverProduitParId(id).getId(), id); 
+		assertEquals(produitService.trouverToutLesProduits().size(), allProduitSize + 1); 
 	}
 	
 	@Test

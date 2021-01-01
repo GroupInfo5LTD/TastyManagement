@@ -1,4 +1,4 @@
-	package com.groupinfo5ltd.tastyManagement.service;
+package com.groupinfo5ltd.tastyManagement.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -194,7 +194,7 @@ public class VenteServiceTest {
 		
 		fail("Exception expected to be throwed"); 
 		} catch (Exception e) {
-
+			e.getStackTrace(); 
 		}
 		
 	}
@@ -213,7 +213,7 @@ public class VenteServiceTest {
 		
 		fail("Exception expected to be throwed"); 
 		} catch (Exception e) {
-
+			e.getStackTrace(); 
 		}
 		
 	}

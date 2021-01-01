@@ -1,5 +1,6 @@
 package com.groupinfo5ltd.tastyManagement.service.impl;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.groupinfo5ltd.tastyManagement.entity.Produit;
+import com.groupinfo5ltd.tastyManagement.entity.Vente;
 import com.groupinfo5ltd.tastyManagement.repository.IProduitRepository;
 import com.groupinfo5ltd.tastyManagement.service.IProduitService;
 
@@ -63,8 +65,30 @@ public class ProduitService implements IProduitService{
 
 	@Override
 	public Set<Produit> trouverToutLesProduits() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Produit> produits = new HashSet<>(); 
+		produitRepository.findAll()
+					.forEach(produit -> produits.add(produit));
+		if(produits.isEmpty()) { 
+			log.info("PRODUIT TABLE IS EMPTY");
+		}
+		else  {
+			log.info("PRODUIT TABLE HAS " + produits.size() + " rows ");
+		}
+		return produits;
 	}
+	
+//	@Override
+//	public Set<Vente> trouverToutLesVentes() {
+//		Set<Vente> ventes = new HashSet<>(); 
+//		venteRepository.findAll()
+//				.forEach((vente -> ventes.add(vente)));
+//		if(ventes.isEmpty()) {
+//			log.info("VENTE TABLE IS EMPTY");
+//		}
+//		else { 
+//			log.info("VENDEUR TABLE HAS " + ventes.size() + " rows");
+//		}
+//		return ventes;
+//	}
 
 }
