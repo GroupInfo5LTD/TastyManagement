@@ -194,7 +194,7 @@ public class VenteServiceTest {
 		
 		fail("Exception expected to be throwed"); 
 		} catch (Exception e) {
-
+			e.getStackTrace(); 
 		}
 		
 	}
@@ -213,7 +213,7 @@ public class VenteServiceTest {
 		
 		fail("Exception expected to be throwed"); 
 		} catch (Exception e) {
-
+			e.getStackTrace(); 
 		}
 		
 	}
