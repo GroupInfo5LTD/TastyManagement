@@ -23,6 +23,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 public class Vendeur {
+	
+	
+
+	private static long undefiniedVendeurId = -1; 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id ; 
@@ -33,7 +37,15 @@ public class Vendeur {
 	@Column(nullable = false)
 	private String lastName; 
 	
-	@OneToMany(mappedBy = "vendeur", cascade = {CascadeType.PERSIST/*, CascadeType.MERGE*/})
+	@OneToMany(mappedBy = "vendeur", cascade = {CascadeType.PERSIST, CascadeType.REMOVE/*, CascadeType.MERGE*/})
 	private Set<Vente> ventesVendeur = new HashSet<>();
  
+	
+	public static long getUndefiniedVendeurId() {
+		return undefiniedVendeurId;
+	}
+
+	public static void setUndefiniedVendeurId(long undefiniedVendeurId) {
+		Vendeur.undefiniedVendeurId = undefiniedVendeurId;
+	}
 }

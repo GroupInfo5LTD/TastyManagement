@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.groupinfo5ltd.tastyManagement.entity.Vendeur;
+import com.groupinfo5ltd.tastyManagement.entity.Vente;
 import com.groupinfo5ltd.tastyManagement.repository.IVendeurRepository;
 import com.groupinfo5ltd.tastyManagement.service.IVendeurService;
+import com.groupinfo5ltd.tastyManagement.service.IVenteService;
 
 @Service
 public class VendeurService implements IVendeurService {
@@ -19,6 +21,9 @@ public class VendeurService implements IVendeurService {
 	private static final Logger log = LoggerFactory.getLogger(VendeurService.class);
 	@Autowired
 	IVendeurRepository vendeurRepository;
+	
+	@Autowired 
+	IVenteService venteService; 
 
 	@Override
 	public Vendeur ajouterVendeur(Vendeur vendeur) {
@@ -53,9 +58,21 @@ public class VendeurService implements IVendeurService {
 
 	@Override
 	public void supprimerVendeur(Vendeur vendeur) {
+		Set<Vente> ventesVendeur = new HashSet<>(); 
 		try {
 			if(vendeurExists(vendeur.getId())) { 
 				log.info("DELETE Vendeur" + vendeur.toString());
+				vendeur.getVentesVendeur().forEach(
+						vente -> ventesVendeur.add(vente)
+						); 
+				/**
+				 * Set the vendeur in ventes to UNDIFINIED VENDEUR as we don't want to delete ventes, 
+				 * and at the same time no null field. Vente.vendeur
+				 */
+				for(Vente vente : ventesVendeur) { 
+					vente.setVendeur(trouverVendeurParId(Vendeur.getUndefiniedVendeurId()));
+					venteService.modifierVente(vente); 
+				}
 			}
 			else { 
 				log.info("VENTE DOESN'T EXIST IN THE DATABASE. the requested vente to be deleted: " + vendeur.toString()); 
