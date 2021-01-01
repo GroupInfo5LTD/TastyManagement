@@ -112,6 +112,9 @@ public class VenteService implements IVenteService{
 		if(ventes.isEmpty()) {
 			log.info("VENTE TABLE IS EMPTY");
 		}
+		else { 
+			log.info("VENDEUR TABLE HAS " + ventes.size() + " rows");
+		}
 		return ventes;
 	}
 	

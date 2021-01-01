@@ -4,6 +4,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,17 +37,23 @@ public class VendeurServiceTest {
 	
 	
 	@Test
+	@Transactional
 	void shouldReturnTrue_When_VendeurAddedToDatabase() {
 		// given 
 		//vendeurEnregistrer
+		Vendeur vendeur = new Vendeur() ; 
+		vendeur.setFirstName("Karl");
+		vendeur.setLastName("Schneider");
 		
+		
+		int allVendeurSize = vendeurService.trouverToutLesVendeurs().size(); 
 		// when
 		
-		Long id = vendeurService.ajouterVendeur(this.vendeurEnregistrer).getId(); 
+		 vendeurService.ajouterVendeur(vendeur); 
 		
 		// then
 		
-		assertEquals(vendeurService.trouverVendeurParId(id).getId(), id); 
+		assertEquals(vendeurService.trouverToutLesVendeurs().size(), allVendeurSize + 1); 
 	}
 	
 	@Test

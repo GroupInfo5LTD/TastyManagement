@@ -1,5 +1,6 @@
 package com.groupinfo5ltd.tastyManagement.service.impl;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -88,8 +89,27 @@ public class VendeurService implements IVendeurService {
 
 	@Override
 	public Set<Vendeur> trouverToutLesVendeurs() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Vendeur> vendeurs = new HashSet<>(); 
+		vendeurRepository.findAll()
+					.forEach(vendeur -> vendeurs.add(vendeur));
+		if(vendeurs.isEmpty()) { 
+			log.info("VENDEUR TABLE IS EMPTY");
+		}
+		else { 
+			log.info("VENDEUR TABLE HAS " + vendeurs.size() + " rows");
+		}
+		return vendeurs;
 	}
+	
+//	@Override
+//	public Set<Vente> trouverToutLesVentes() {
+//		Set<Vente> ventes = new HashSet<>(); 
+//		venteRepository.findAll()
+//				.forEach((vente -> ventes.add(vente)));
+//		if(ventes.isEmpty()) {
+//			log.info("VENTE TABLE IS EMPTY");
+//		}
+//		return ventes;
+//	}
 
 }

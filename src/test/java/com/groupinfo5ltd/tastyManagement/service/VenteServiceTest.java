@@ -1,4 +1,4 @@
-	package com.groupinfo5ltd.tastyManagement.service;
+package com.groupinfo5ltd.tastyManagement.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
